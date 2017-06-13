@@ -1,0 +1,5 @@
+# ignore server setting files
+core.php
+database.php
+email.php
+bootstrap.php

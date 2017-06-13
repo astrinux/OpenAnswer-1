@@ -1,0 +1,221 @@
+<?php
+/**
+ * This file is loaded automatically by the app/webroot/index.php file after core.php
+ *
+ * This file should load/create any application wide configuration settings, such as
+ * Caching, Logging, loading additional configuration files.
+ *
+ * You should also use this file to include any files that provide global functions/constants
+ * that your application uses.
+ *
+ * PHP 5
+ *
+ * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ *
+ * Licensed under The MIT License
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link          http://cakephp.org CakePHP(tm) Project
+ * @package       app.Config
+ * @since         CakePHP(tm) v 0.10.8.2117
+ * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ */
+
+  Configure::write('oa_theme', '' );	// leave this blank if you have not created your own theme
+	Configure::write('storage_days', 365); // CURRENTLY DISABLED - number in days that messages and old schedules need to be retained
+  
+  // URL to the openConnector installation
+  Configure::write('openConnectorServer', 'http://oa.mydomain.com:8081/openAnswer');
+  
+  // default timezone for this installation
+  Configure::write('default_timezone', 'America/New_York');
+
+  Configure::write('title', 'OpenAnswer');  // browser title
+
+  Configure::write('admin_email', 'admin@test.com');
+
+  // Google API key
+  Configure::write('google_api_key', '');
+
+  // The scheduling calendar feature requires a closed-source calendar plugin
+  Configure::write('calendar_enabled', false);    
+  Configure::write('outbound_dialer_enabled', false);    // requires a closed-source outbound campaign plugin
+
+  // location of the Redis server required for session sharing between OC and OA/ OQ
+  define("REDIS_SERVER", 'oc.mydomain.com');  
+  define("REDIS_PASSWORD", 'yyyyyyyxxxxx');  // leave blank if no password
+
+  // prefix for the OpenAnswer MySQL tables
+  define("OA_TBL_PREFIX", 'ccact_');
+
+  // drop down choices for the user prompts for appointment scheduling
+  Configure::write('calendar_prompts', array('First and Last name', 'Phone Number', 'Email Address'));
+  // default work schedule for a service provider
+  Configure::write('default_workplan', array (
+  		"monday" => array('start' => '09:00', 'end' =>'17:00',"breaks" => array(array ("start" => "11:30","end" => "12:30"))),
+  		"tuesday" => array('start' => '09:00', 'end' => '17:00',"breaks" => array(array ("start" => "11:30","end" => "12:30"))),
+  		"wednesday" => array('start' => '09:00', 'end' => '17:00',"breaks" => array(array ("start" => "11:30","end" => "12:30"))),
+  		"thursday" => array('start' => '09:00', 'end' => '17:00',"breaks" => array(array ("start" => "11:30","end" => "12:30"))),
+  		"friday" => array('start' => '09:00', 'end' => '17:00',"breaks" => array(array ("start" => "11:30","end" => "12:30"))),
+  		"saturday" => null,
+  		"sunday" => null
+  ));  
+
+  // operator break reasons
+  Configure::write('break_reasons', array(
+    'Bathroom Break', 
+    'Snack Break', 
+    'Dispatching Duties', 
+    'Lunch', 
+    'Mentor Meeting',
+    'Staff Meeting', 
+    'Start of Shift',
+    'End of Shift', 
+    'Technical Issue',
+    'Training',
+    'Other'
+  ));  
+
+	// Specify the break reasons to be included in the break count displayed in the page header
+	Configure::write('break_count_reasons', array('Bathroom Break', 'Snack Break'));
+
+  // indexes of operator break reasons array that are considered personal breaks, used in pulling metrics
+  Configure::write('personal_break_reason_idx', array(0,1,3));  
+  
+  // email address(es) to notify when a new account is created, delimit multiple addresses with a ','
+  Configure::write('new_account_notification', '');   
+
+	// categories of mistakes that can be assigned to a message
+	Configure::write('mistake_categories', array('Accurate Msg Content', 'Dispatching', 'Situation & Employee', 'Spelling', 'Grammar', 'Auditing Mistake', 'Client Issues', 'WOW Factor', 'Answer Phrase/ Exit Phrase', 'Other'));  
+  
+  // IMPORTANT:: set this to FALSE for now.  An external fax processor is required to send out faxes
+  Configure::write('fax_enabled', FALSE);    
+  Configure::write('fax_directory', '/tmp/faxes');  //
+
+  // Setting 'reassign_difficulty' to TRUE will automatically rate the sub-account difficulty based on the calltypes defined
+	Configure::write('reassign_difficulty', FALSE);
+	
+  Configure::write('pause_agent', false); // pause agent in the asterisk queue while screen is popped by incoming call or re-pop
+  Configure::write('remember_last_section', true); // remember last section viewed when restarting OA, if set to false user will always see the 'Welcome' section
+
+Cache::config('default', array(
+    'engine' => 'File',
+    'mask' => 0666,
+));
+
+/*  
+********** IMPORTANT:::  Specify where the Redis server is
+================================================================================================================================  
+*/
+Cache::config('short', array(
+    'engine' => 'Redis',
+    'duration' => '+1 minutes',
+    'server ' => 'server',
+    'password' => 'password',
+    'timeout' => 30,
+    'prefix' => 'cake_short_',
+    'persistent' => true
+));
+
+// long
+Cache::config('long', array(
+    'engine' => 'Redis',
+    'duration' => '+1 minutes',
+    'server ' => 'server',
+    'password' => 'password',
+    'timeout' => 30,
+    'prefix' => 'cake_long_',
+    'persistent' => true
+));
+
+
+
+/**
+ * The settings below can be used to set additional paths to models, views and controllers.
+ *
+ * App::build(array(
+ *     'Model'                     => array('/path/to/models', '/next/path/to/models'),
+ *     'Model/Behavior'            => array('/path/to/behaviors', '/next/path/to/behaviors'),
+ *     'Model/Datasource'          => array('/path/to/datasources', '/next/path/to/datasources'),
+ *     'Model/Datasource/Database' => array('/path/to/databases', '/next/path/to/database'),
+ *     'Model/Datasource/Session'  => array('/path/to/sessions', '/next/path/to/sessions'),
+ *     'Controller'                => array('/path/to/controllers', '/next/path/to/controllers'),
+ *     'Controller/Component'      => array('/path/to/components', '/next/path/to/components'),
+ *     'Controller/Component/Auth' => array('/path/to/auths', '/next/path/to/auths'),
+ *     'Controller/Component/Acl'  => array('/path/to/acls', '/next/path/to/acls'),
+ *     'View'                      => array('/path/to/views', '/next/path/to/views'),
+ *     'View/Helper'               => array('/path/to/helpers', '/next/path/to/helpers'),
+ *     'Console'                   => array('/path/to/consoles', '/next/path/to/consoles'),
+ *     'Console/Command'           => array('/path/to/commands', '/next/path/to/commands'),
+ *     'Console/Command/Task'      => array('/path/to/tasks', '/next/path/to/tasks'),
+ *     'Lib'                       => array('/path/to/libs', '/next/path/to/libs'),
+ *     'Locale'                    => array('/path/to/locales', '/next/path/to/locales'),
+ *     'Vendor'                    => array('/path/to/vendors', '/next/path/to/vendors'),
+ *     'Plugin'                    => array('/path/to/plugins', '/next/path/to/plugins'),
+ * ));
+ *
+ */
+
+/**
+ * Custom Inflector rules, can be set to correctly pluralize or singularize table, model, controller names or whatever other
+ * string is passed to the inflection functions
+ *
+ * Inflector::rules('singular', array('rules' => array(), 'irregular' => array(), 'uninflected' => array()));
+ * Inflector::rules('plural', array('rules' => array(), 'irregular' => array(), 'uninflected' => array()));
+ *
+ */
+
+/**
+ * Plugins need to be loaded manually, you can either load them one by one or all of them in a single call
+ * Uncomment one of the lines below, as you need. make sure you read the documentation on CakePlugin to use more
+ * advanced ways of loading plugins
+ *
+ * CakePlugin::loadAll(); // Loads all plugins at once
+ * CakePlugin::load('DebugKit'); //Loads a single plugin named DebugKit
+ *
+ */
+CakePlugin::loadAll(array(
+    array('routes' => true, 'bootstrap' => true, 'ignoreMissing' => true)
+));
+  
+
+/**
+ * You can attach event listeners to the request lifecyle as Dispatcher Filter . By Default CakePHP bundles two filters:
+ *
+ * - AssetDispatcher filter will serve your asset files (css, images, js, etc) from your themes and plugins
+ * - CacheDispatcher filter will read the Cache.check configure variable and try to serve cached content generated from controllers
+ *
+ * Feel free to remove or add filters as you see fit for your application. A few examples:
+ *
+ * Configure::write('Dispatcher.filters', array(
+ *		'MyCacheFilter', //  will use MyCacheFilter class from the Routing/Filter package in your app.
+ *		'MyPlugin.MyFilter', // will use MyFilter class from the Routing/Filter package in MyPlugin plugin.
+ * 		array('callable' => $aFunction, 'on' => 'before', 'priority' => 9), // A valid PHP callback type to be called on beforeDispatch
+ *		array('callable' => $anotherMethod, 'on' => 'after'), // A valid PHP callback type to be called on afterDispatch
+ *
+ * ));
+ */
+Configure::write('Dispatcher.filters', array(
+	'AssetDispatcher',
+	'CacheDispatcher'
+));
+
+
+
+/**
+ * https://cakephp.lighthouseapp.com/projects/42880/docs-firecake
+ *
+ * @param  mixed $data     data to log
+ * @param  string $logLevel log, info, warn, error
+ * @param  string $label    give your data some label
+ *
+ */
+function fb($data, $logLevel = 'log', $label = null) {
+    if (Configure::read() > 0) {
+        App::uses('FireCake', 'DebugKit.Lib');
+        FireCake::$logLevel($data, $label);
+    }
+}

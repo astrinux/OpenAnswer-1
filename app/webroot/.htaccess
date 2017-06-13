@@ -1,0 +1,12 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    ## rewrite javascript/ css files that contain versioning info for forcing refresh
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^(.+)\.vn\-ver\d+(\.(?:js|css))$ $1$2
+    
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_URI} !=/server-status
+    RewriteRule ^ index.php [L]
+</IfModule>
